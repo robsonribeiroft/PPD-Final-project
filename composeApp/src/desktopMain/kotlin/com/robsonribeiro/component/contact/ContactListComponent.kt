@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,7 +22,8 @@ import com.robsonribeiro.values.alpha
 @Composable
 fun ContactListComponent(
     modifier: Modifier,
-    users: List<User>,
+    contacts: List<User>,
+    user: User?,
     onItemClick: (User) -> Unit
 ) {
 
@@ -38,13 +38,8 @@ fun ContactListComponent(
                 .padding(Padding.small),
             state = listState,
         ) {
-            items(users) { contact ->
-                ContactItemListComponent(user = contact, onClick = onItemClick)
-            }
-            item {
-                if (users.isNotEmpty()) {
-                    Box(Modifier.size(Padding.veryExtraLarge))
-                }
+            items(contacts) { contact ->
+                ContactItemListComponent(contact = contact, user = user, onClick = onItemClick)
             }
         }
 

@@ -16,19 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.robsonribeiro.model.User
-import com.robsonribeiro.model.mockUser
-import com.robsonribeiro.model.positionDisplay
-import com.robsonribeiro.model.rangeRadiusDisplay
-import com.robsonribeiro.model.withinReach
+import com.robsonribeiro.model.*
 import com.robsonribeiro.values.*
-
-
-const val CURRENT_DISTANCE_INFO = "Current distance:"
 
 @Composable
 fun ContactItemListComponent(
-    user: User,
+    contact: User,
+    user: User?,
     modifier: Modifier = Modifier,
     onClick: (User) -> Unit
 ) {
@@ -44,9 +38,9 @@ fun ContactItemListComponent(
                 .wrapContentHeight()
                 .padding(vertical = Padding.small)
                 .clickable {
-                    onClick(user)
+                    onClick(contact)
                 },
-            backgroundColor = if (user.isOnline) Color.White else Color.BlackRich.alpha(0.5f),
+            backgroundColor = if (contact.isOnline) Color.White else Color.BlackRich.alpha(0.5f),
             elevation = Padding.none,
             shape = RoundedCornerShape(Padding.regular),
             border = BorderStroke(
@@ -65,37 +59,47 @@ fun ContactItemListComponent(
                         .size(Padding.largeExtra)
                         .background(
                             shape = CircleShape,
-                            color = if (user.isOnline) Color.GreenEmerald else Color.RedPantoneDarker
+                            color = if (contact.isOnline) Color.GreenEmerald else Color.RedPantoneDarker
                         )
                         .padding(Padding.small),
                     imageVector = Icons.Default.Person,
                     contentDescription = String.empty,
-                    tint = if (user.isOnline) Color.White else Color.BlackRich
+                    tint = if (contact.isOnline) Color.White else Color.BlackRich
                 )
 
                 Column {
                     Text(
-                        text ="[${user.id}]",
+                        text ="[${contact.id}]",
                         style = MaterialTheme.typography.body1.copy(color = Color.BlackRich)
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        horizontalArrangement = Arrangement.spacedBy(Padding.large, Alignment.Start)
                     ) {
                         Text(
-                            text = "Position(x,y): ${user.positionDisplay()}",
+                            text = "Position(x,y): ${contact.positionDisplay()}",
                             style = MaterialTheme.typography.body2.copy(color = Color.BlackRich)
                         )
                         Text(
-                            text = "Radius Range: ${user.rangeRadiusDisplay()}",
+                            text = "Radius Range: ${contact.rangeRadiusDisplay()}",
                             style = MaterialTheme.typography.body2.copy(color = Color.BlackRich)
                         )
                     }
-                    Text(
-                        text = "$CURRENT_DISTANCE_INFO ${user.withinReach(mockUser)}",
-                        style = MaterialTheme.typography.body2.copy(color = Color.BlackRich)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(Padding.large, Alignment.Start)
+                    ) {
+                        Text(
+                            text = "Distance: ${contact.distanceFromUser(user!!)}",
+                            style = MaterialTheme.typography.body2.copy(color = Color.BlackRich)
+                        )
+                        Text(
+                            text = "Within Reach: ${contact.withinReach(user)}",
+                            style = MaterialTheme.typography.body2.copy(color = Color.BlackRich)
+                        )
+                    }
                 }
             }
         }

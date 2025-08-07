@@ -3,12 +3,13 @@ package com.robsonribeiro.viewmodel
 import androidx.lifecycle.ViewModel
 import com.robsonribeiro.helper.isRmiServerLive
 import com.robsonribeiro.komms.broker.BrokerKomm
+import com.robsonribeiro.komms.model.ChatMessagePayload
+import com.robsonribeiro.komms.model.invoke
 import com.robsonribeiro.komms.rmi.KommRmiClient
 import com.robsonribeiro.komms.rmi.KommRmiServer
 import com.robsonribeiro.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlin.let
 
 class MainViewModel : ViewModel() {
 
@@ -151,6 +152,9 @@ class MainViewModel : ViewModel() {
                     currentSessions[updatedUser] = messages
                     _chatSessions.value = currentSessions
                     _contacts.value = currentSessions.keys.toList().pluck(_myUser.value)
+                    if (_currentChatUser.value?.id == updatedUser.id) {
+                        _currentChatUser.value = updatedUser
+                    }
                 }
 
                 println("onUpdateUserInfoHandler: $updatedUser")
@@ -161,7 +165,9 @@ class MainViewModel : ViewModel() {
             user.id,
             connectionData
         ) { event ->
-            println("Broker: $event")
+            event<ChatMessagePayload> { (senderUserId, _, data) ->
+                appendIncomingMessage(senderUserId, data.message)
+            }
         }
     }
 

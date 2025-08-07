@@ -2,10 +2,12 @@ package com.robsonribeiro.component.chat
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -16,20 +18,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import com.robsonribeiro.component.BentoComponent
 import com.robsonribeiro.model.ChatMessage
+import com.robsonribeiro.model.User
 import com.robsonribeiro.values.BaseBackground
 import com.robsonribeiro.values.BlackRich
+import com.robsonribeiro.values.GreenEmerald
 import com.robsonribeiro.values.Padding
+import com.robsonribeiro.values.RedPantoneDarker
 import com.robsonribeiro.values.TextSize
 import com.robsonribeiro.values.alpha
 import com.robsonribeiro.values.empty
-
-const val CHAT_LIST_HEADER = "CHAT"
 
 @Composable
 fun ChatComponent(
     modifier: Modifier,
     chatIsEnabled: Boolean,
-    currentChat: String? = CHAT_LIST_HEADER,
+    currentChat: User,
     messages: List<ChatMessage>,
     onBackClick: ()-> Unit,
     sendMessage: (String)->Unit
@@ -45,7 +48,7 @@ fun ChatComponent(
             modifier = modifier
                 .fillMaxSize()
         ) {
-            ChatHeader(Modifier.fillMaxWidth(), currentChat ?: CHAT_LIST_HEADER, onBackClick)
+            ChatHeader(Modifier.fillMaxWidth(), currentChat, onBackClick)
             ChatListComponent(
                 modifier = Modifier.weight(1f),
                 messages = messages
@@ -62,7 +65,7 @@ fun ChatComponent(
 @Composable
 fun ChatHeader(
     modifier: Modifier,
-    currentChat: String,
+    currentChat: User,
     onBackClick: ()-> Unit
 ) {
     Column(
@@ -89,9 +92,21 @@ fun ChatHeader(
                     tint = Color.White
                 )
             }
+            Icon(
+                modifier = Modifier
+                    .size(Padding.largeExtra)
+                    .background(
+                        shape = CircleShape,
+                        color = if (currentChat.isOnline) Color.GreenEmerald else Color.RedPantoneDarker
+                    )
+                    .padding(Padding.small),
+                imageVector = Icons.Default.Person,
+                contentDescription = String.empty,
+                tint = if (currentChat.isOnline) Color.White else Color.BlackRich
+            )
             Text(
                 modifier = Modifier.weight(1f),
-                text = currentChat,
+                text = currentChat.id,
                 style = TextStyle(
                     fontWeight = FontWeight.Medium,
                     lineHeight = TextSize.large,

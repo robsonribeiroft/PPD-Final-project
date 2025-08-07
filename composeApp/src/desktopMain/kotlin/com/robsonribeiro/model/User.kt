@@ -2,6 +2,7 @@ package com.robsonribeiro.model
 
 import kotlinx.serialization.Serializable
 import kotlin.math.pow
+import kotlin.math.sqrt
 
 @Serializable
 data class User(
@@ -13,15 +14,15 @@ data class User(
 ): java.io.Serializable
 
 fun User.withinReach(user: User): Boolean {
-    if (id == user.id) return false
-
-    val dx = this.posX - user.posX
-    val dy = this.posY - user.posY
-
-    val distanceSquared = dx.pow(2) + dy.pow(2)
+    val distance = distanceFromUser(user)
     val totalReach = this.distanceRadius + user.distanceRadius
-    val totalReachSquared = totalReach.pow(2)
-    return distanceSquared <= totalReachSquared
+    return totalReach - distance > 0
+}
+
+fun User.distanceFromUser(user: User): Float {
+    val deltaX = user.posX - this.posX
+    val deltaY = user.posY - this.posY
+    return sqrt(deltaX.pow(2) + deltaY.pow(2))
 }
 
 fun User.positionDisplay(): String {
