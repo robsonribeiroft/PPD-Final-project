@@ -32,7 +32,7 @@ import com.robsonribeiro.values.empty
 fun ChatComponent(
     modifier: Modifier,
     chatIsEnabled: Boolean,
-    currentChat: User,
+    currentChat: User?,
     messages: List<ChatMessage>,
     onBackClick: ()-> Unit,
     sendMessage: (String)->Unit
@@ -65,7 +65,7 @@ fun ChatComponent(
 @Composable
 fun ChatHeader(
     modifier: Modifier,
-    currentChat: User,
+    currentChat: User?,
     onBackClick: ()-> Unit
 ) {
     Column(
@@ -97,16 +97,16 @@ fun ChatHeader(
                     .size(Padding.largeExtra)
                     .background(
                         shape = CircleShape,
-                        color = if (currentChat.isOnline) Color.GreenEmerald else Color.RedPantoneDarker
+                        color = if (currentChat?.isOnline ?: false) Color.GreenEmerald else Color.RedPantoneDarker
                     )
                     .padding(Padding.small),
                 imageVector = Icons.Default.Person,
                 contentDescription = String.empty,
-                tint = if (currentChat.isOnline) Color.White else Color.BlackRich
+                tint = if (currentChat?.isOnline ?: false) Color.White else Color.BlackRich
             )
             Text(
                 modifier = Modifier.weight(1f),
-                text = currentChat.id,
+                text = currentChat?.id ?: "Chat",
                 style = TextStyle(
                     fontWeight = FontWeight.Medium,
                     lineHeight = TextSize.large,

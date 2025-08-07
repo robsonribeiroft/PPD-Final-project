@@ -85,7 +85,7 @@ fun App(viewModel: MainViewModel) {
                     .weight(1f)
                     .fillMaxSize(),
                 chatIsEnabled = true,
-                currentChat = currentChatContact!!,
+                currentChat = currentChatContact,
                 chatMessages,
                 onBackClick = {
                     viewModel.closeChatWithContact()
