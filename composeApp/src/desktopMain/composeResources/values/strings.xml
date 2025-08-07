@@ -1,0 +1,21 @@
+<resources>
+    <string name="connect_client_title">Join the server</string>
+    <string name="connect_client_description">Click here to setup</string>
+    <string name="connection_rmi_info">rmi - %1$s</string>
+    <string name="connection_broker_info">broker - %1$s</string>
+    <string name="user_location_info">positioned in (x,y)</string>
+    <string name="user_radius_range_info">radius range</string>
+    <string name="user_connected">you are online</string>
+    <string name="user_disconnected">you are offline</string>
+    <string name="disconnect_from_server">disconnect</string>
+
+    <string name="dialog_confirmation_cancel">cancel</string>
+    <string name="dialog_confirmation_ok">confirm</string>
+    <string name="dialog_info_ok">ok</string>
+
+    <string name="dialog_update_position_title">Enter New Position</string>
+    <string name="dialog_update_position_hint">e.g., 45, 60 or -5.5, 60</string>
+    <string name="dialog_update_position_invalid_input">Position is invalid!</string>
+    <string name="dialog_update_position_cancel">cancel</string>
+    <string name="dialog_update_position_ok">Update</string>
+</resources>
