@@ -125,6 +125,7 @@ fun App(viewModel: MainViewModel) {
                     rmiPort
                 )
                 showConnectionDialog = false
+                showUpdatePositionDialog = true
             }
         )
     }

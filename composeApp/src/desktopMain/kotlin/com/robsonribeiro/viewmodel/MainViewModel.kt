@@ -32,6 +32,8 @@ class MainViewModel : ViewModel() {
     private val _currentChatMessages = MutableStateFlow<List<ChatMessage>>(emptyList())
     val currentChatMessages = _currentChatMessages.asStateFlow()
 
+    private val _cachedChatSessions: CachedChatSession = mutableMapOf()
+
 
     fun openChatWithContact(user: User) {
         _currentChatUser.value = user
@@ -47,6 +49,14 @@ class MainViewModel : ViewModel() {
     fun toggleConnection(isOnline: Boolean) {
         val updatedUser = _myUser.value?.copy(isOnline = isOnline)
         updatedUser?.let { client.updateUserInfo(it) }
+        if (isOnline) {
+            _cachedChatSessions.forEach { userId, messages ->
+                messages.forEach { message ->
+                    appendIncomingMessage(userId, message)
+                }
+            }
+            _cachedChatSessions.clear()
+        }
         _myUser.value = updatedUser
     }
 
@@ -156,9 +166,6 @@ class MainViewModel : ViewModel() {
                         _currentChatUser.value = updatedUser
                     }
                 }
-
-                println("onUpdateUserInfoHandler: $updatedUser")
-                println("onUpdateUserInfoHandler: ${_chatSessions.value}")
             }
         ))
         broker = BrokerKomm(
@@ -166,7 +173,12 @@ class MainViewModel : ViewModel() {
             connectionData
         ) { event ->
             event<ChatMessagePayload> { (senderUserId, _, data) ->
-                appendIncomingMessage(senderUserId, data.message)
+                if (_myUser.value?.isOnline ?: false) {
+                    appendIncomingMessage(senderUserId, data.message)
+                } else {
+                    val updatedMessages = (_cachedChatSessions[senderUserId] ?: emptyList()) + data.message
+                    _cachedChatSessions[senderUserId] = updatedMessages
+                }
             }
         }
     }

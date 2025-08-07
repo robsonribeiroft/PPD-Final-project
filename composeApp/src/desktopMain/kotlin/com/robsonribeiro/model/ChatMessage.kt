@@ -11,6 +11,7 @@ enum class TypeMessage {
 }
 
 typealias ChatSession = MutableMap<User, List<ChatMessage>>
+typealias CachedChatSession = MutableMap<String, List<String>>
 
 
 val MOCK_CHAT_MESSAGE = List(30) { it: Int ->
